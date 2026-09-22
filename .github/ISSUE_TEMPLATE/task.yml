@@ -1,0 +1,102 @@
+name: 🧩 Implementation task
+description: Track one vertical slice of work that maps to a TASK document.
+title: "TASK-xxxx: "
+labels: ["type: task", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One issue, one vertical slice — *domain function → API → one card → boundary tests*,
+        not "build the whole home screen".
+
+        Every task issue is backed by a document in `docs/tasks/`. If it does not exist yet,
+        create it from [`TASK-TEMPLATE.md`](https://github.com/bigmooon/maemul-on/blob/main/docs/tasks/TASK-TEMPLATE.md)
+        **before** writing code.
+
+  - type: input
+    id: task-id
+    attributes:
+      label: Task ID
+      description: Matches the file name in `docs/tasks/`.
+      placeholder: TASK-0002
+    validations:
+      required: true
+
+  - type: input
+    id: task-doc
+    attributes:
+      label: Task document
+      description: Path to the TASK file, or `to be created`.
+      placeholder: docs/tasks/TASK-0002-core-schema-and-owner-scoped-repositories.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-outcome
+    attributes:
+      label: User outcome
+      description: What the user can do when this lands. Skip if this is infrastructure, and say why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Both halves are required. An empty "out of scope" is the most common way work sprawls.
+      value: |
+        **In scope**
+        -
+
+        **Out of scope**
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: paths
+    attributes:
+      label: Changeable paths
+      description: Paths not listed here are not touched by this task.
+      placeholder: |
+        - apps/api/src/maemul_on/...
+        - apps/web/src/...
+    validations:
+      required: true
+
+  - type: input
+    id: links
+    attributes:
+      label: Requirements / invariants / ADRs
+      placeholder: "requirements §3.1, INV-06, INV-14, ADR-0003"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance examples
+      description: At least three — one happy path, one boundary, one failure. Use concrete values.
+      value: |
+        - Given / When / Then:
+        - Given / When / Then:
+        - Given / When / Then:
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification commands
+      description: Only commands that will actually be run.
+      value: |
+        - `make test-unit`
+        - `make verify`
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Blocked by / blocks
+      placeholder: "Blocked by #12. Blocks #15."

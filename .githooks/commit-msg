@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Conventional Commits 검사. 실제 규칙은 scripts/check-commit-msg.sh 에 있다.
+#
+# 켜기:  git config core.hooksPath .githooks
+# 끄기:  git config --unset core.hooksPath
+set -u
+
+HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$HOOK_DIR/.." && pwd)"
+
+exec bash "$REPO_ROOT/scripts/check-commit-msg.sh" "$1"

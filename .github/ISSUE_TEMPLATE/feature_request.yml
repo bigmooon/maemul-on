@@ -1,0 +1,88 @@
+name: ✨ Feature request
+description: Propose a change to what the product does for its user.
+title: "feat: "
+labels: ["type: feature", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A feature request describes **a job the user needs done**, not an implementation.
+
+        The product centre is: *find contracts expiring within three calendar months →
+        contact the customer → record the consultation*. Proposals that move that centre
+        need an ADR in `docs/decisions/`, not just an issue.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I searched existing issues and found no duplicate.
+          required: true
+        - label: I checked `docs/product/requirements.md` and `docs/product/deprecated.md`.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Which user job is painful today? Describe the work, not the solution.
+      placeholder: "As an agent, I re-check the same expiring contract every morning because there is no record of who I already called."
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired user outcome
+      description: What can the user do once this ships? Write it in business terms.
+      placeholder: "From the home screen I can see, per property, when I last contacted the customer and what came of it."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else would solve the same problem, and why is this better?
+    validations:
+      required: true
+
+  - type: input
+    id: requirements
+    attributes:
+      label: Related requirements / ADRs
+      description: "Section numbers from `docs/product/requirements.md`, or ADR IDs. Write 'new' if none exists yet."
+      placeholder: "requirements §4.2, ADR-0007"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Invariant check
+      description: Confirm the proposal does not break the product invariants listed in `AGENTS.md`.
+      options:
+        - label: It does not hide or auto-remove properties from the expiry list (INV-01, INV-02, INV-03).
+        - label: It does not present estimated or missing dates as confirmed values (INV-04).
+        - label: It does not merge customers or contracts on name alone (INV-05).
+        - label: It does not expose another signed-in user's data anywhere (INV-06).
+        - label: It does not give the chatbot write access or arbitrary SQL (INV-07).
+        - label: It does not create a public or shared URL (INV-11).
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Does this need an ADR?
+      options:
+        - "No — it implements existing requirements as written"
+        - "Yes — it changes or contradicts a current requirement"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, references, or prior discussion.
