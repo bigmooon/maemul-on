@@ -55,6 +55,19 @@ Claude Code와 Codex가 함께 쓰는 저장소다. 두 도구 모두 [`AGENTS.m
 
 기능·작업·불변식의 상태는 [`feature-list.json`](feature-list.json)에서 확인한다.
 
+## 기여
+
+이슈·PR·커밋 메시지는 **영어**로 쓴다. 규칙은 [`CONTRIBUTING.md`](CONTRIBUTING.md)에 있다
+(Conventional Commits, 브랜치 규칙, PR 체크리스트).
+
+```bash
+git config commit.template .gitmessage.txt   # 커밋 메시지 형식 미리 채우기
+git config core.hooksPath .githooks          # 형식에 맞지 않는 커밋을 로컬에서 거부
+```
+
+- [행동 강령](CODE_OF_CONDUCT.md)
+- [보안 취약점 신고](SECURITY.md) — 공개 이슈로 올리지 않는다
+
 ## 라이선스
 
 [LICENSE](LICENSE)

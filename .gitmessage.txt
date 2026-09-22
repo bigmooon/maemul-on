@@ -1,0 +1,22 @@
+# <type>(<scope>): <subject>
+#
+# ----|---- subject line, imperative mood, <= 72 chars, no trailing period ---|
+#
+# Body — why, not what. Wrap at 72 columns.
+# ----|-------------------------------------------------------------------|
+#
+# Footer — Closes #123 / Refs #123 / BREAKING CHANGE: <migration>
+#
+# ---------------------------------------------------------------------------
+# type   feat | fix | docs | style | refactor | perf | test | build | ci
+#        | chore | revert
+# scope  web | api | api-client | ai | evals | tests | scripts | docs
+#        | deps | release
+#
+# Breaking change: put "!" after the type/scope AND a BREAKING CHANGE footer.
+#
+# Never put personal data in a commit message: no phone numbers, customer
+# names, consultation text, tokens, or authorization codes.
+#
+# Full rules: CONTRIBUTING.md
+# ---------------------------------------------------------------------------

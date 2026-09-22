@@ -1,6 +1,6 @@
 # 진행 상황
 
-- 최종 갱신: 2026-09-21
+- 최종 갱신: 2026-09-23
 - 갱신 규칙: 작업 세션이 끝날 때 2·4·5절을 실제 실행 결과로 갱신한다. 실행하지 않은 것을 통과로 쓰지 않는다.
 
 ## 1. 현재 상태
@@ -14,6 +14,10 @@ Excel 등록, 만기 계산, 고객·상담, 검색·챗봇, 네이버 로그인
 - 기준 문서: [`docs/product/requirements.md`](docs/product/requirements.md) (단일 기준), [`docs/architecture/harness.md`](docs/architecture/harness.md)
 - 기능·작업 상태: [`feature-list.json`](feature-list.json)
 - 작업 지침: [`AGENTS.md`](AGENTS.md) + 영역별 `AGENTS.md`
+- 협업 규칙(영어): [`CONTRIBUTING.md`](CONTRIBUTING.md) — 이슈·PR·커밋은 영어, Conventional Commits
+
+2026-09-23에 하네스를 `main`에 커밋하고 GitHub 협업 규칙(issue form, PR 템플릿, 커밋 규칙,
+`SECURITY.md`, 라벨 24개)을 추가했다. 제품 기능 수는 **여전히 0건이다.**
 
 ## 2. 실행한 명령과 결과
 
@@ -94,7 +98,7 @@ INV-01 ~ INV-14 중 **자동 검증되는 것은 아직 하나도 없다.** `fea
 - **네이버 앱 등록·검수 미착수** — F01/F10의 실제 지원 범위와 검수 조건을 확인하지 않았다. 승인 대기 중 제한 계정 테스트를 공개 로그인 완료로 표현하지 않는다.
 - **F12(기존 일정 수정)는 blocked** — 네이버 캘린더 수정 API의 실제 동작이 미검증이다. 문서의 `modify` 표기만으로 지원을 약속하지 않는다.
 - **미확정 제품 질문 8개** — [`harness.md §17`](docs/architecture/harness.md). 중점/서브 아파트 개수와 지정 방식, 연락 상태의 최소값, 캘린더에 담을 일정 종류 등. 답이 정해지기 전에는 합리적 default를 fixture에만 쓰고 확정 요구처럼 문서화하지 않는다.
-- **커밋하지 않았다** — 작업 트리에만 있다. `.gitignore`는 만들어 두었다.
+- **CI가 없다** — `verify`는 로컬에서만 돈다. PR에서 자동으로 도는 워크플로는 아직 만들지 않았다.
 - **실사용자 검증 0회** — 어머니를 포함한 실제 사용자 과제 관찰은 아직 하지 않았다.
 
 ## 5. 다음 작업

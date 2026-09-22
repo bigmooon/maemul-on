@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & ideas
+    url: https://github.com/bigmooon/maemul-on/discussions
+    about: Ask a question or float an idea before opening an issue.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/bigmooon/maemul-on/security/policy
+    about: Never file security problems as public issues. Follow the security policy instead.
+  - name: 📘 Product requirements (single source of truth)
+    url: https://github.com/bigmooon/maemul-on/blob/main/docs/product/requirements.md
+    about: Check whether the behaviour you expect is already specified, or was deprecated.

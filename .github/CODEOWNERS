@@ -1,0 +1,18 @@
+# Code owners are requested for review automatically.
+# Syntax: https://docs.github.com/articles/about-code-owners
+# The last matching pattern wins.
+
+*                       @bigmooon
+
+# Source of truth for agent instructions and product requirements —
+# changes here override implementation conventions everywhere else.
+/AGENTS.md              @bigmooon
+/CLAUDE.md              @bigmooon
+/docs/product/          @bigmooon
+/docs/decisions/        @bigmooon
+
+# Developer harness: one change here affects every future task.
+/scripts/               @bigmooon
+/Makefile               @bigmooon
+/make.ps1               @bigmooon
+/.github/               @bigmooon
