@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+/*
+ * 매물온 디자인 토큰 — rem 기준.
+ * 근거: harness.md §13.6, requirements.md §9.1(UI 수용 기준).
+ *
+ * 규칙:
+ * - html { font-size: 100% } 을 유지한다. 62.5%로 낮춰 1rem을 10px처럼 쓰지 않는다.
+ *   사용자의 브라우저 글자 확대를 방해하기 때문이다.
+ * - 컴포넌트에서 px를 직접 쓰지 않는다. 여기 토큰을 쓴다.
+ * - 초기 실사용자는 40대 이상 공인중개사다. 큰 글씨와 큰 버튼이 요구사항이다.
+ */
+
+@theme {
+  /* 본문 기본은 1.125rem. 작은 보조 정보도 0.875rem 아래로 내리지 않는다. */
+  --text-body: 1.125rem;
+  --text-small: 0.9375rem;
+  --text-tiny: 0.875rem;
+  --text-title: 1.5rem;
+  --text-display: 1.875rem;
+
+  --spacing-1: 0.5rem;
+  --spacing-2: 0.75rem;
+  --spacing-3: 1rem;
+  --spacing-4: 1.5rem;
+  --spacing-5: 2rem;
+
+  /* 주요 버튼·입력의 최소 높이. 모바일 핵심 버튼은 가능하면 3rem. */
+  --control-min-height: 2.75rem;
+  --control-min-height-primary: 3rem;
+
+  --content-max: 75rem;
+
+  /* 48rem 미만 1열, 48~64rem 상황에 따라 2열, 64rem 이상 2열 허용. */
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+}
+
+:root {
+  font-size: 100%;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.6;
+  font-family:
+    'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', system-ui,
+    sans-serif;
+  background-color: #f7f7f8;
+  color: #1a1a1a;
+}
+
+/* hover 없이도 모든 조작이 가능해야 한다. focus를 지우지 않는다. */
+:focus-visible {
+  outline: 0.1875rem solid #2563eb;
+  outline-offset: 0.125rem;
+}
+
+/* 금액·연락처·날짜처럼 긴 값은 말줄임만 하지 말고 줄바꿈한다. */
+.value-wrap {
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}

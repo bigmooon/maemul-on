@@ -1,0 +1,48 @@
+# --- 비밀 ------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- 고객 데이터 ------------------------------------------------------------
+# 실제 Excel·연락처·상담 원문을 저장소에 넣지 않는다.
+# 평가용 fixture는 반드시 비식별화한다 (evals/AGENTS.md).
+*.xls
+*.xlsx
+!evals/fixtures/workbooks/*.xls
+!evals/fixtures/workbooks/*.xlsx
+
+# --- Node ------------------------------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+*.tsbuildinfo
+.eslintcache
+
+# --- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# --- 평가 리포트 ------------------------------------------------------------
+# 커밋 정책은 ADR로 정한다. 그전까지 로컬 실행 결과를 올리지 않는다.
+evals/reports/*
+!evals/reports/.gitkeep
+
+# --- 도구·OS ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# 로컬 전용 에이전트 설정. 공유 설정은 .claude/settings.json 에 둔다.
+.claude/settings.local.json

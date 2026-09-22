@@ -1,0 +1,220 @@
+{
+  "version": "0.1.0",
+  "product": "매물온",
+  "updated_at": "2026-09-21",
+  "source_of_truth": "docs/product/requirements.md",
+  "notes": [
+    "status는 사람이 갱신한다. 측정하지 않은 값을 done으로 쓰지 않는다.",
+    "done의 조건은 AGENTS.md '완료의 정의'를 따른다. 코드 실행만으로는 done이 아니다.",
+    "verified_by에 '미구현'이라고 적힌 불변식은 아직 자동 검증되지 않는다."
+  ],
+  "status_values": ["not_started", "in_progress", "blocked", "done"],
+
+  "invariants": [
+    { "id": "INV-01", "statement": "홈 만기 목록은 중점·서브·일반 모든 관리 등급의 내 매물을 포함한다.", "verified_by": "미구현 (TASK-0006)" },
+    { "id": "INV-02", "statement": "오늘부터 달력 기준 3개월 뒤까지 양 끝을 포함하며 고정 90일을 쓰지 않는다.", "verified_by": "미구현 (TASK-0003)" },
+    { "id": "INV-03", "statement": "연락 완료여도 만기 목록에서 자동 제거하지 않는다.", "verified_by": "미구현 (TASK-0006)" },
+    { "id": "INV-04", "statement": "예상 날짜와 누락 날짜를 확정값처럼 표시하거나 답하지 않는다.", "verified_by": "미구현 (TASK-0003, TASK-0012)" },
+    { "id": "INV-05", "statement": "고객 이름만으로 고객·계약을 자동 병합하지 않는다.", "verified_by": "미구현 (TASK-0002, TASK-0004)" },
+    { "id": "INV-06", "statement": "다른 로그인 사용자의 자료는 API·검색·인용·파일·캘린더 어디에서도 노출하지 않는다.", "verified_by": "미구현 (TASK-0002)" },
+    { "id": "INV-07", "statement": "챗봇은 MVP에서 읽기 전용이며 임의 SQL을 실행하지 않는다.", "verified_by": "미구현 (TASK-0011)" },
+    { "id": "INV-08", "statement": "캘린더 실패는 계약·상담 저장과 기본 조회를 막지 않는다.", "verified_by": "미구현 (TASK-0009)" },
+    { "id": "INV-09", "statement": "Excel 재시도·중복 클릭이 중복 원장을 만들지 않는다.", "verified_by": "미구현 (TASK-0005)" },
+    { "id": "INV-10", "statement": "검색 실패를 실제 매물 부재로 단정하지 않는다.", "verified_by": "미구현 (TASK-0012)" },
+    { "id": "INV-11", "statement": "로그인한 공인중개사 개인의 비공개 자료만 관리하며 공개·공유 URL을 만들지 않는다.", "verified_by": "미구현 (TASK-0002)" },
+    { "id": "INV-12", "statement": "Excel의 원문 값·셀 메모를 보존하고 불확실한 금액·날짜·관계자를 자동 확정하지 않는다.", "verified_by": "미구현 (TASK-0004)" },
+    { "id": "INV-13", "statement": "중점/서브/일반 뱃지는 사용자별 관리 편의이며 데이터 접근 권한으로 사용하지 않는다.", "verified_by": "미구현 (TASK-0007)" },
+    { "id": "INV-14", "statement": "직접 등록과 Excel 등록은 동일한 canonical schema와 validation을 통과한다.", "verified_by": "미구현 (TASK-0013)" }
+  ],
+
+  "features": [
+    {
+      "id": "F01", "title": "네이버 로그인", "priority": "required", "status": "not_started",
+      "acceptance": "승인된 흐름으로 사용자 식별·세션 발급·재로그인·취소/실패 처리가 동작한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-06", "INV-11"],
+      "areas": ["apps/api/src/maemul_on/auth", "apps/web/src/features/auth"],
+      "tasks": ["TASK-0008"], "verify": ["make test-contract"], "evidence": [],
+      "risks": ["네이버 앱 등록·검수 조건 미확인", "승인 대기 중 제한 계정 테스트를 공개 로그인 완료로 표현하지 않는다"]
+    },
+    {
+      "id": "F02", "title": "내 자료 접근 보호", "priority": "required", "status": "not_started",
+      "acceptance": "다른 사용자 자료의 API·파일·검색·인용·캘린더 접근을 차단한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-06", "INV-11", "INV-13"],
+      "areas": ["apps/api/src/maemul_on", "tests/security"],
+      "tasks": ["TASK-0002"], "verify": ["make test-security"], "evidence": []
+    },
+    {
+      "id": "F03", "title": "Excel 등록·확인", "priority": "required", "status": "not_started",
+      "acceptance": "지원 .xls/.xlsx 양식에서 변환안을 만들고 중요 값을 수정한 뒤 확정 등록한다. 재시도는 중복 저장하지 않는다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-09", "INV-12", "INV-14"],
+      "areas": ["apps/api/src/maemul_on/imports", "apps/web/src/features/imports"],
+      "tasks": ["TASK-0004", "TASK-0005"], "verify": ["make test-unit", "make test-contract"], "evidence": []
+    },
+    {
+      "id": "F04", "title": "중점/서브/일반 관리 분류", "priority": "required", "status": "not_started",
+      "acceptance": "허가된 내 매물을 분류 조회·변경할 수 있고 이력이 유지된다. 동일 단지명 오연결을 확인한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-01", "INV-13"],
+      "areas": ["apps/api/src/maemul_on/domain", "apps/web/src/features/properties"],
+      "tasks": ["TASK-0007"], "verify": ["make test-unit", "make test-security"], "evidence": []
+    },
+    {
+      "id": "F05", "title": "3개월 내 만기 홈", "priority": "required", "status": "not_started",
+      "acceptance": "날짜 경계·정렬·전체 건수·3건 우선 표시·모두 보기·예상/누락/경과가 올바르다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-01", "INV-02", "INV-03", "INV-04"],
+      "areas": ["apps/api/src/maemul_on/domain", "apps/web/src/routes/home"],
+      "tasks": ["TASK-0003", "TASK-0006"], "verify": ["make test-unit", "make test-contract"], "evidence": []
+    },
+    {
+      "id": "F06", "title": "고객 연락·상담", "priority": "required", "status": "not_started",
+      "acceptance": "계약·고객 역할별로 기록하고 재접속 후 유지한다. 이름만으로 병합하지 않는다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-05"],
+      "areas": ["apps/api/src/maemul_on/domain", "apps/web/src/features/consultations"],
+      "tasks": ["TASK-0010"], "verify": ["make test-unit", "make test-contract"], "evidence": []
+    },
+    {
+      "id": "F07", "title": "계약 수동 갱신·이력", "priority": "required", "status": "not_started",
+      "acceptance": "새 날짜·금액을 확인 저장하고 이전 값·상담을 보존한다. 홈과 검색은 새 값으로 조회한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-03"],
+      "areas": ["apps/api/src/maemul_on/domain"],
+      "tasks": ["TASK-0010"], "verify": ["make test-unit"], "evidence": []
+    },
+    {
+      "id": "F08", "title": "조건 검색·별도 챗봇", "priority": "required", "status": "not_started",
+      "acceptance": "검증된 조건으로 실제 내 데이터를 조회하고 상세로 연결한다. 임의 SQL은 실행하지 않는다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-06", "INV-07"],
+      "areas": ["apps/api/src/maemul_on/search", "apps/api/src/maemul_on/chat", "ai/schemas"],
+      "tasks": ["TASK-0011"], "verify": ["make test-unit", "make eval-offline"], "evidence": []
+    },
+    {
+      "id": "F09", "title": "상담 근거 검색", "priority": "required_baseline", "status": "not_started",
+      "acceptance": "keyword/FTS로 관련 기록을 찾고 근거를 연결한다. RAG 추가 시 동일 질문으로 성능을 비교한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-06", "INV-10"],
+      "areas": ["apps/api/src/maemul_on/search", "evals/datasets"],
+      "tasks": ["TASK-0012"], "verify": ["make eval-offline"], "evidence": [],
+      "risks": ["의미 검색은 ai/AGENTS.md의 추가 조건을 모두 만족할 때만 도입한다"]
+    },
+    {
+      "id": "F10", "title": "네이버 캘린더 API 등록", "priority": "required_external", "status": "not_started",
+      "acceptance": "사용자가 확인한 일정이 본인 캘린더에 등록되고 결과가 기록된다. 취소·권한 오류·중복 클릭·응답 불명을 처리한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-08"],
+      "areas": ["apps/api/src/maemul_on/calendar", "apps/api/src/maemul_on/adapters"],
+      "tasks": ["TASK-0009"], "verify": ["make test-contract"], "evidence": [],
+      "risks": ["timeout은 failed가 아니라 unknown이다. 자동 재전송 금지", "성공 화면만으로 실제 반영을 단정하지 않는다"]
+    },
+    {
+      "id": "F11", "title": "삭제·실패 복구·관측", "priority": "required", "status": "not_started",
+      "acceptance": "삭제 범위, 저장 결과·재시도, 개인정보 없는 오류·지연·비용 기록을 제공한다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-08"],
+      "areas": ["apps/api/src/maemul_on/observability", "apps/api/src/maemul_on/jobs"],
+      "tasks": [], "verify": ["make verify"], "evidence": []
+    },
+    {
+      "id": "F12", "title": "기존 캘린더 일정 수정", "priority": "spike_first", "status": "blocked",
+      "acceptance": "API 실제 동작과 일정 식별자를 검증하기 전 자동 수정 완료를 약속하지 않는다.",
+      "requirements_ref": "docs/product/requirements.md#5-기능-요구사항과-완료-조건",
+      "invariants": ["INV-08"],
+      "areas": ["apps/api/src/maemul_on/calendar"],
+      "tasks": [], "verify": [], "evidence": [],
+      "blocked_reason": "네이버 캘린더 수정 API의 실제 동작이 미검증. 문서의 modify 표기만으로 지원을 약속하지 않는다."
+    },
+
+    {
+      "id": "U01", "title": "React.js·TypeScript·Zustand·Tailwind CSS 기반", "priority": "required", "status": "done",
+      "acceptance": "lint/typecheck/build가 통과하고 스토어 경계 테스트가 있다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": [],
+      "areas": ["apps/web"],
+      "tasks": ["TASK-0001"], "verify": ["make verify"], "evidence": ["progress.md"]
+    },
+    {
+      "id": "U02", "title": "rem 기반 반응형 UI", "priority": "required", "status": "in_progress",
+      "acceptance": "20rem 이상 viewport, 확대·키보드 조작이 동작한다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": [],
+      "areas": ["apps/web/src/styles"],
+      "tasks": ["TASK-0001"], "verify": ["make test-web"], "evidence": [],
+      "notes": "토큰만 정의됨. 실제 화면 검증은 기능 구현 이후."
+    },
+    {
+      "id": "U03", "title": "변칙 금액·날짜 해석", "priority": "required", "status": "not_started",
+      "acceptance": "제공 XLS fixture의 금액·날짜 변칙을 원문 보존과 함께 후보로 제시한다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": ["INV-12"],
+      "areas": ["apps/api/src/maemul_on/imports"],
+      "tasks": ["TASK-0004"], "verify": ["make test-unit"], "evidence": []
+    },
+    {
+      "id": "U04", "title": "셀 메모·가족관계 가독화", "priority": "required", "status": "not_started",
+      "acceptance": "XLS cell comment를 추출하고 관계자 후보를 자동 병합 없이 보여준다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": ["INV-05", "INV-12"],
+      "areas": ["apps/api/src/maemul_on/imports"],
+      "tasks": ["TASK-0014"], "verify": ["make test-unit"], "evidence": []
+    },
+    {
+      "id": "U05", "title": "공인중개사 개인용 범위", "priority": "required", "status": "not_started",
+      "acceptance": "공유·공개 route가 존재하지 않고 모든 조회가 owner scope다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": ["INV-11"],
+      "areas": ["apps/api/src/maemul_on/api", "apps/api/src/maemul_on/auth"],
+      "tasks": ["TASK-0002"], "verify": ["make test-security"], "evidence": []
+    },
+    {
+      "id": "U06", "title": "중점·서브 뱃지", "priority": "required", "status": "not_started",
+      "acceptance": "등급 변경·표시가 동작하고 홈 만기는 세 등급을 모두 포함한다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": ["INV-01", "INV-13"],
+      "areas": ["apps/web/src/features/properties"],
+      "tasks": ["TASK-0007"], "verify": ["make test-web"], "evidence": []
+    },
+    {
+      "id": "U07", "title": "직접 등록 CRUD", "priority": "required", "status": "not_started",
+      "acceptance": "Excel 경로와 같은 validation으로 create/read/update/archive가 동작한다.",
+      "requirements_ref": "docs/architecture/harness.md",
+      "invariants": ["INV-14"],
+      "areas": ["apps/api/src/maemul_on/domain", "apps/web/src/features/properties"],
+      "tasks": ["TASK-0013"], "verify": ["make test-contract"], "evidence": []
+    }
+  ],
+
+  "tasks": [
+    { "id": "TASK-0001", "title": "Repository bootstrap and verify command", "status": "done", "features": ["U01", "U02"], "doc": null },
+    { "id": "TASK-0002", "title": "Core schema and owner-scoped repositories", "status": "not_started", "features": ["F02", "U05"], "doc": null },
+    { "id": "TASK-0003", "title": "Expiry window domain function and fixtures", "status": "not_started", "features": ["F05"], "doc": null },
+    { "id": "TASK-0004", "title": "Excel sample parser and import preview", "status": "not_started", "features": ["F03", "U03"], "doc": null },
+    { "id": "TASK-0005", "title": "Import commit idempotency", "status": "not_started", "features": ["F03"], "doc": null },
+    { "id": "TASK-0006", "title": "Home expiry API and UI", "status": "not_started", "features": ["F05"], "doc": null },
+    { "id": "TASK-0007", "title": "Apartment management tier badges", "status": "not_started", "features": ["F04", "U06"], "doc": null },
+    { "id": "TASK-0008", "title": "Naver OAuth spike", "status": "not_started", "features": ["F01"], "doc": null },
+    { "id": "TASK-0009", "title": "Naver Calendar create spike and fake adapter", "status": "not_started", "features": ["F10"], "doc": null },
+    { "id": "TASK-0010", "title": "Consultation/contact workflow", "status": "not_started", "features": ["F06", "F07"], "doc": null },
+    { "id": "TASK-0011", "title": "Structured QueryPlan and compiler", "status": "not_started", "features": ["F08"], "doc": null },
+    { "id": "TASK-0012", "title": "FTS note retrieval baseline and eval v1", "status": "not_started", "features": ["F09"], "doc": null },
+    { "id": "TASK-0013", "title": "Manual property CRUD with shared validation", "status": "not_started", "features": ["U07"], "doc": null },
+    { "id": "TASK-0014", "title": "Source notes and relationship cards", "status": "not_started", "features": ["U04"], "doc": null }
+  ],
+
+  "adrs_planned": [
+    { "id": "ADR-0001", "title": "제품 원장", "proposal": "PostgreSQL을 최신 업무 원장으로 사용", "status": "not_written" },
+    { "id": "ADR-0002", "title": "사용자 경계", "proposal": "로그인 사용자 단위 owner scope", "status": "not_written" },
+    { "id": "ADR-0003", "title": "비동기 작업", "proposal": "PostgreSQL job table + worker", "status": "not_written" },
+    { "id": "ADR-0004", "title": "정형 검색", "proposal": "허용 목록 Query DSL, LLM SQL 금지", "status": "not_written" },
+    { "id": "ADR-0005", "title": "상담 검색 baseline", "proposal": "PostgreSQL FTS 우선", "status": "not_written" },
+    { "id": "ADR-0006", "title": "캘린더 결과 불명", "proposal": "unknown 상태, 자동 재전송 금지", "status": "not_written" },
+    { "id": "ADR-0007", "title": "프런트/백 계약", "proposal": "OpenAPI에서 TS client 생성", "status": "not_written" },
+    { "id": "ADR-0008", "title": "날짜", "proposal": "Asia/Seoul Clock 주입 + calendar month clamp", "status": "not_written" },
+    { "id": "ADR-0009", "title": "AI 추가 기준", "proposal": "고정 eval 개선과 예산 통과 시에만 채택", "status": "not_written" },
+    { "id": "ADR-0010", "title": "원본 파일 보관", "proposal": "사용자 확인·법률 검토 후 제한 기간 확정", "status": "not_written" }
+  ]
+}

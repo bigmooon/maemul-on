@@ -1,0 +1,21 @@
+{
+  "name": "maemul-on",
+  "private": true,
+  "version": "0.1.0",
+  "description": "매물온 — 매물·계약 만기·고객 관리 (monorepo 루트)",
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "test": "pnpm --filter web test",
+    "lint": "pnpm --filter web lint",
+    "typecheck": "pnpm --filter web typecheck",
+    "doctor": "bash scripts/doctor.sh",
+    "init": "bash scripts/init.sh",
+    "smoke": "bash scripts/smoke.sh",
+    "verify": "bash scripts/verify.sh"
+  }
+}

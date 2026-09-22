@@ -1,0 +1,27 @@
+# 줄바꿈을 저장소 수준에서 고정한다.
+#
+# core.autocrlf=true 인 Windows 에서 clone 하면 셸 스크립트가 CRLF 로 체크아웃되고
+# bash 가 `$'\r': command not found` 로 죽는다. 개발자 설정에 의존하지 않도록
+# 여기서 파일 종류별로 못 박는다.
+
+# 기본: 저장소와 작업 트리 모두 LF.
+* text=auto eol=lf
+
+# 셸 스크립트는 반드시 LF. 하나라도 CRLF 면 make 경로 전체가 무너진다.
+*.sh        text eol=lf
+Makefile    text eol=lf
+
+# PowerShell 5.1 은 CRLF 를 기대한다. make.ps1 의 UTF-8 BOM 은 내용이므로 그대로 보존된다.
+*.ps1       text eol=crlf
+
+# 잠금 파일은 도구가 생성한다. diff 를 줄이고 병합 충돌 표시를 억제한다.
+pnpm-lock.yaml  -diff linguist-generated
+uv.lock         -diff linguist-generated
+
+# 바이너리. Excel 은 고객 데이터라 .gitignore 로도 막지만, 평가 fixture 예외가 있다.
+*.xls       binary
+*.xlsx      binary
+*.png       binary
+*.jpg       binary
+*.ico       binary
+*.pdf       binary
